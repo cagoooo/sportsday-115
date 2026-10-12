@@ -2312,3 +2312,191 @@ svg {
     transition-duration: 0.01ms !important;
   }
 }
+
+@media (min-width: 821px) {
+  body {
+    font-size: 18px;
+  }
+
+  .site-nav > a {
+    font-size: 0.96rem;
+  }
+
+  .eyebrow,
+  .section-kicker {
+    font-size: 0.8rem;
+  }
+
+  .hero__edition {
+    font-size: 1.1rem;
+  }
+
+  .hero__intro {
+    font-size: 1.16rem;
+    line-height: 1.8;
+  }
+
+  .hero__facts .fact-label,
+  .hero__facts div > small {
+    font-size: 0.9rem;
+  }
+
+  .hero__facts strong {
+    font-size: 1.2rem;
+  }
+
+  .day-point__label {
+    font-size: 0.92rem;
+  }
+
+  .section-heading__aside {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  .highlight__index {
+    font-size: 0.9rem;
+  }
+
+  .highlight__index span {
+    font-size: 0.76rem;
+  }
+
+  .highlight p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+
+  .highlight--feature p {
+    font-size: 1.12rem;
+  }
+
+  .highlight__meta {
+    font-size: 0.9rem;
+  }
+
+  .section-heading--light .section-heading__aside {
+    color: rgb(255 253 248 / 82%);
+  }
+
+  .ceremony-card__time span,
+  .schedule-end__time span {
+    font-size: 0.74rem;
+  }
+
+  .ceremony-card__body p,
+  .schedule-end p {
+    color: rgb(255 253 248 / 82%);
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+
+  .filter-button {
+    font-size: 0.95rem;
+  }
+
+  .filter-button span {
+    font-size: 0.75rem;
+  }
+
+  .schedule-count {
+    color: rgb(255 253 248 / 82%);
+    font-size: 0.95rem;
+  }
+
+  .schedule-row__number {
+    color: rgb(255 253 248 / 72%);
+    font-size: 0.75rem;
+  }
+
+  .schedule-row h3 {
+    font-size: 1.1rem;
+  }
+
+  .schedule-row__participants {
+    color: rgb(255 253 248 / 80%);
+    font-size: 0.95rem;
+  }
+
+  .schedule-row__tag {
+    font-size: 0.8rem;
+  }
+
+  .schedule-note {
+    color: rgb(255 253 248 / 78%);
+    font-size: 0.95rem;
+  }
+
+  .parking-heading > p {
+    font-size: 1.08rem;
+  }
+
+  .parking-alerts p {
+    font-size: 1.05rem;
+  }
+
+  .parking-option p {
+    font-size: 1.05rem;
+  }
+
+  .parking-option__note {
+    font-size: 0.9rem;
+  }
+
+  .parking-rules li {
+    color: rgb(255 253 248 / 91%);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .parking-rules__warning {
+    font-size: 0.98rem;
+  }
+
+  .flyer-section__heading > p,
+  .flyer-share-note {
+    font-size: 1.05rem;
+  }
+
+  .flyer-card__caption h4 {
+    font-size: 1.02rem;
+  }
+
+  .flyer-card__caption > a {
+    font-size: 0.9rem;
+  }
+
+  .visitor-intro > p:not(.section-kicker) {
+    font-size: 1.08rem;
+  }
+
+  .visitor-note h3 {
+    font-size: 1.15rem;
+  }
+
+  .visitor-note p {
+    font-size: 1.02rem;
+  }
+
+  .final-invite > p {
+    font-size: 0.98rem;
+  }
+
+  .final-invite__link {
+    font-size: 1rem;
+  }
+
+  .site-footer__school strong {
+    font-size: 0.96rem;
+  }
+
+  .site-footer__school span,
+  .site-credit {
+    font-size: 0.88rem;
+  }
+
+  .site-update-notice__copy p,
+  .site-update-notice__actions button {
+    font-size: 0.96rem;
+  }
+}
