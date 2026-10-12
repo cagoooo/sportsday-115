@@ -49,10 +49,10 @@ function renderSchedule() {
   }
 
   scheduleList.innerHTML = visibleItems
-    .map((item) => {
+    .map((item, index) => {
       const number = String(item.number).padStart(2, "0");
       return `
-        <article class="schedule-row" data-category="${item.category}" aria-label="${item.time}，${item.title}，${item.participants}">
+        <article class="schedule-row" style="--row-delay: ${Math.min(index, 6) * 25}ms" data-category="${item.category}" aria-label="${item.time}，${item.title}，${item.participants}">
           <time class="schedule-row__time" datetime="${item.time}">${item.time}</time>
           <div class="schedule-row__copy">
             <span class="schedule-row__number">ITEM ${number}</span>
@@ -104,3 +104,95 @@ window.addEventListener("resize", () => {
 });
 
 renderSchedule();
+
+// 將 Hyperframes 的分段進場、描線與短交錯節奏套用於互動網頁。
+// 使用瀏覽器原生動畫；內容預設可見，動畫失效也能照常閱讀。
+(() => {
+  const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (motionPreference.matches || typeof Element.prototype.animate !== "function") return;
+
+  const activeAnimations = new Map();
+  const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
+  let revealObserver;
+
+  function animate(element, frames, options = {}) {
+    if (!element || motionPreference.matches) return;
+    const animation = element.animate(frames, {
+      duration: 680,
+      easing: ease,
+      fill: "backwards",
+      iterations: 1,
+      ...options,
+    });
+    activeAnimations.set(animation, element);
+    const release = () => activeAnimations.delete(animation);
+    animation.addEventListener("finish", release, { once: true });
+    animation.addEventListener("cancel", release, { once: true });
+  }
+
+  function rise(element, delay = 0) {
+    if (!element) return;
+    const style = getComputedStyle(element);
+    const restingTransform = style.transform === "none" ? "" : style.transform;
+    animate(element, [
+      { opacity: 0, transform: `translateY(18px) ${restingTransform}` },
+      { opacity: style.opacity, transform: `translateY(0) ${restingTransform}` },
+    ], { delay });
+  }
+
+  // 從錨點或捲動位置回到網站時，首頁動畫只在可見範圍播放。
+  const hero = document.querySelector(".hero");
+  if (hero && hero.getBoundingClientRect().bottom > 0 && !window.location.hash) {
+    document.querySelectorAll(
+      ".hero__copy > .eyebrow, .hero__edition, .hero h1, .hero__intro, .hero__actions, .hero__facts"
+    ).forEach((element, index) => rise(element, index * 70));
+
+    const slogan = document.querySelector(".hero__slogan");
+    animate(slogan, [
+      { opacity: 0, transform: "translateY(16px) rotate(-3deg) scale(0.96)" },
+      { opacity: 1, transform: "translateY(-2px) rotate(-0.5deg) scale(1.015)", offset: 0.72 },
+      { opacity: 1, transform: "translateY(0) rotate(-1deg) scale(1)" },
+    ], { duration: 820, delay: 300 });
+
+    animate(document.querySelector(".hero__visual"), [
+      { opacity: 0, transform: "translateY(22px) scale(0.97)" },
+      { opacity: 1, transform: "translateY(0) scale(1)" },
+    ], { duration: 1100, delay: 140 });
+
+    document.querySelectorAll(".track-art__lane").forEach((lane, index) => {
+      const length = lane.getTotalLength();
+      animate(lane, [
+        { strokeDasharray: `${length}`, strokeDashoffset: `${length}` },
+        { strokeDasharray: `${length}`, strokeDashoffset: "0" },
+      ], { duration: 1250, delay: 280 + index * 90 });
+    });
+    rise(document.querySelector(".hero__sticker"), 520);
+  }
+
+  if ("IntersectionObserver" in window) {
+    const targets = document.querySelectorAll(
+      ".day-point, .section-heading, .highlight, .ceremony-card, .schedule-end, " +
+      ".parking-heading, .parking-alerts, .parking-option, .parking-rules, " +
+      ".flyer-section__heading, .flyer-share-note, .flyer-card, .visitor-intro, .visitor-note, .final-invite h2"
+    );
+    revealObserver = new IntersectionObserver((entries) => {
+      entries.filter((entry) => entry.isIntersecting).forEach((entry, index) => {
+        revealObserver.unobserve(entry.target);
+        rise(entry.target, Math.min(index, 3) * 65);
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -18px 0px" });
+    targets.forEach((target) => revealObserver.observe(target));
+  }
+
+  // 鍵盤使用者聚焦時，立即顯示該區塊；偏好變更立即停止動效。
+  document.addEventListener("focusin", (event) => {
+    for (const [animation, element] of activeAnimations) {
+      if (element.contains(event.target)) animation.cancel();
+    }
+  });
+  motionPreference.addEventListener("change", (event) => {
+    if (!event.matches) return;
+    revealObserver?.disconnect();
+    for (const animation of activeAnimations.keys()) animation.cancel();
+  });
+})();

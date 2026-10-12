@@ -1018,7 +1018,8 @@ svg {
   min-height: 100px;
   padding: 1rem 0.2rem;
   border-bottom: 1px solid rgb(255 253 248 / 16%);
-  animation: reveal-row 220ms ease both;
+  animation: reveal-row 440ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--row-delay, 0ms);
 }
 
 .schedule-row__time {
@@ -1635,8 +1636,42 @@ svg {
 }
 
 @keyframes reveal-row {
-  from { opacity: 0.65; transform: translateY(3px); }
+  from { opacity: 0.35; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .highlight,
+  .parking-option,
+  .flyer-card {
+    transition: translate 280ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 280ms ease;
+  }
+
+  .highlight:hover,
+  .parking-option:hover,
+  .flyer-card:hover {
+    translate: 0 -4px;
+    box-shadow: 0 12px 28px rgb(16 45 40 / 10%);
+  }
+
+  .button:active {
+    transform: translateY(0) scale(0.97);
+  }
+
+  .text-link span,
+  .site-nav__cta span,
+  .final-invite__link span {
+    transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .text-link:hover span,
+  .site-nav__cta:hover span {
+    transform: translate(2px, -2px);
+  }
+
+  .final-invite__link:hover span {
+    transform: translateY(-3px);
+  }
 }
 
 @media (min-width: 1051px) {
@@ -2308,6 +2343,7 @@ svg {
   *::after {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
