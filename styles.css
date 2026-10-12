@@ -1354,6 +1354,11 @@ svg {
   transition: transform 250ms ease;
 }
 
+.flyer-card__picture {
+  display: block;
+  width: 100%;
+}
+
 .flyer-card__image:hover img {
   transform: scale(1.025);
 }

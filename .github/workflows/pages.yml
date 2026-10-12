@@ -33,7 +33,7 @@ jobs:
           set -euo pipefail
           version="${GITHUB_SHA:0:12}"
           mkdir -p _site
-          cp index.html styles.css app.js pwa.js sw.js manifest.webmanifest favicon.svg favicon-32.png apple-touch-icon.png icon-192.png icon-512.png og-preview.png 1.png 2.png _site/
+          cp index.html styles.css app.js pwa.js sw.js manifest.webmanifest favicon.svg favicon-32.png apple-touch-icon.png icon-192.png icon-512.png og-preview.png 1.png 2.png 1-preview.webp 1-view.webp 2-preview.webp 2-view.webp _site/
           sed -i "s/__BUILD_VERSION__/${version}/g" _site/index.html _site/pwa.js _site/sw.js
           printf '{"version":"%s","cacheVersion":"%s"}\n' "$version" "$version" > _site/version.json
           touch _site/.nojekyll
