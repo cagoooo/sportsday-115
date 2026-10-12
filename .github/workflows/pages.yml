@@ -1,0 +1,48 @@
+name: 發布至 GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 下載網站原始檔
+        uses: actions/checkout@v4
+
+      - name: 設定 GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: 建立含本次版本號的網站
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_SHA:0:12}"
+          mkdir -p _site
+          cp index.html styles.css app.js pwa.js sw.js manifest.webmanifest favicon.svg favicon-32.png apple-touch-icon.png icon-192.png icon-512.png og-preview.png 1.png 2.png _site/
+          sed -i "s/__BUILD_VERSION__/${version}/g" _site/index.html _site/pwa.js _site/sw.js
+          printf '{"version":"%s","cacheVersion":"%s"}\n' "$version" "$version" > _site/version.json
+          touch _site/.nojekyll
+
+      - name: 上傳 GitHub Pages 檔案
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: 部署 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

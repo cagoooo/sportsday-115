@@ -1,0 +1,15 @@
+{
+  "name": "石門國小 115 學年度運動會",
+  "short_name": "石門運動會",
+  "description": "桃園市龍潭區石門國民小學運動會賽程、活動資訊與交通停車指引。",
+  "lang": "zh-Hant",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f1e7",
+  "theme_color": "#173d36",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

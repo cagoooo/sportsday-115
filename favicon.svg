@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="15" fill="#173d36"/>
+  <circle cx="32" cy="30" r="22" fill="#f4edda"/>
+  <circle cx="47" cy="15" r="4.5" fill="#f0a53c"/>
+  <text x="32" y="38" text-anchor="middle" fill="#173d36" font-family="Microsoft JhengHei, Noto Sans TC, sans-serif" font-size="27" font-weight="800">石</text>
+  <path d="M12 47c12-8 28-8 40 0M12 52c12-8 28-8 40 0" fill="none" stroke="#e7764f" stroke-linecap="round" stroke-width="2.7"/>
+</svg>
