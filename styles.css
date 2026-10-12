@@ -331,6 +331,55 @@ svg {
   line-height: 1.95;
 }
 
+.hero__slogan {
+  display: inline-flex;
+  max-width: 100%;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1.2rem;
+  padding: 0.65rem 1rem;
+  color: var(--c-forest-deep);
+  background: var(--c-gold);
+  border: 2px solid rgb(255 253 248 / 84%);
+  border-radius: 0.7rem 1.5rem 0.7rem 1.5rem;
+  box-shadow: 5px 5px 0 rgb(7 26 23 / 30%);
+  transform: rotate(-1deg);
+}
+
+.hero__slogan-mark {
+  color: var(--c-orange-dark);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.hero__slogan-mark--end {
+  align-self: flex-start;
+  margin-top: 0.15rem;
+  font-size: 0.9rem;
+}
+
+.hero__slogan-label {
+  display: block;
+  margin-bottom: 0.18rem;
+  color: rgb(23 61 54 / 76%);
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.hero__slogan p {
+  margin: 0;
+  font-size: clamp(1.12rem, 1.75vw, 1.48rem);
+  font-weight: 800;
+  letter-spacing: 0.025em;
+  line-height: 1.35;
+}
+
+.hero__slogan strong {
+  color: var(--c-orange-dark);
+  font-weight: 900;
+}
+
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
