@@ -173,7 +173,8 @@ renderSchedule();
     const targets = document.querySelectorAll(
       ".day-point, .section-heading, .highlight, .ceremony-card, .schedule-end, " +
       ".parking-heading, .parking-alerts, .parking-option, .parking-rules, " +
-      ".flyer-section__heading, .flyer-share-note, .flyer-card, .visitor-intro, .visitor-note, .final-invite h2"
+      ".flyer-section__heading, .flyer-share-note, .flyer-card, .visitor-intro, .visitor-note, .final-invite h2, " +
+      ".preview-reel, .video-card, .preview-note"
     );
     revealObserver = new IntersectionObserver((entries) => {
       entries.filter((entry) => entry.isIntersecting).forEach((entry, index) => {
@@ -194,5 +195,86 @@ renderSchedule();
     if (!event.matches) return;
     revealObserver?.disconnect();
     for (const animation of activeAnimations.keys()) animation.cancel();
+  });
+})();
+
+// 預演影片：HyperFrames 預告動畫（進入畫面才載入、播放）與 YouTube 點擊後才嵌入
+(() => {
+  const video = document.querySelector(".preview-reel__video");
+  const toggle = document.querySelector(".preview-reel__toggle");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const saveData = navigator.connection?.saveData === true;
+  let userPaused = reduceMotion.matches || saveData;
+
+  function ensureSource() {
+    if (!video || video.getAttribute("src")) return;
+    const narrow = window.matchMedia("(max-width: 700px)").matches;
+    video.src = narrow ? video.dataset.srcNarrow : video.dataset.srcWide;
+  }
+
+  function renderToggle() {
+    if (!toggle || !video) return;
+    const playing = !video.paused;
+    toggle.setAttribute("aria-pressed", String(!playing));
+    toggle.querySelector(".preview-reel__toggle-text").textContent = playing ? "暫停動畫" : "播放動畫";
+    toggle.querySelector(".preview-reel__toggle-icon").textContent = playing ? "❚❚" : "▶";
+  }
+
+  function playReel() {
+    ensureSource();
+    const attempt = video.play();
+    if (attempt && typeof attempt.catch === "function") attempt.catch(renderToggle);
+  }
+
+  if (video) {
+    if (toggle) {
+      toggle.hidden = false;
+      toggle.addEventListener("click", () => {
+        if (video.paused) {
+          userPaused = false;
+          playReel();
+        } else {
+          userPaused = true;
+          video.pause();
+        }
+      });
+    }
+    video.addEventListener("play", renderToggle);
+    video.addEventListener("pause", renderToggle);
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((entries) => {
+        const visible = entries.some((entry) => entry.isIntersecting);
+        if (visible && !userPaused) playReel();
+        else if (!visible && !video.paused) video.pause();
+      }, { threshold: 0.3 }).observe(video);
+    } else if (!userPaused) {
+      playReel();
+    }
+
+    reduceMotion.addEventListener?.("change", (event) => {
+      if (!event.matches) return;
+      userPaused = true;
+      video.pause();
+    });
+    renderToggle();
+  }
+
+  // 點封面才換成 YouTube 播放器，頁面一開始不載入三個嵌入框。
+  document.querySelectorAll(".video-card__play").forEach((button) => {
+    button.addEventListener("click", () => {
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube-nocookie.com/embed/${button.dataset.youtube}?autoplay=1&rel=0&playsinline=1`;
+      iframe.title = `${button.dataset.title}（YouTube 影片）`;
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+      button.replaceWith(iframe);
+      iframe.focus();
+      if (video && !video.paused) {
+        userPaused = true;
+        video.pause();
+      }
+    });
   });
 })();

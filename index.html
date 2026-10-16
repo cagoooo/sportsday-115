@@ -61,6 +61,7 @@
       </button>
 
       <nav class="site-nav" id="site-nav" aria-label="主要導覽">
+        <a href="#preview">預演影片</a>
         <a href="#highlights">活動亮點</a>
         <a href="#schedule">完整賽程</a>
         <a href="#parking">交通停車</a>
@@ -92,6 +93,7 @@
           <div class="hero__actions">
             <a class="button button--bright" href="#schedule">查看完整賽程 <span aria-hidden="true">↓</span></a>
             <a class="text-link" href="#visitors">家長觀賽資訊 <span aria-hidden="true">↗</span></a>
+            <a class="text-link text-link--new" href="#preview"><b>NEW</b> 預演影片搶先看 <span aria-hidden="true">▶</span></a>
           </div>
 
           <div class="hero__facts" aria-label="活動基本資訊">
@@ -152,6 +154,115 @@
         <div class="day-point">
           <span class="day-point__time">14:00</span>
           <span class="day-point__label">閉幕典禮</span>
+        </div>
+      </section>
+
+      <section class="preview-section" id="preview" aria-labelledby="preview-title">
+        <div class="preview-section__inner">
+          <div class="section-heading section-heading--light">
+            <div>
+              <p class="section-kicker">REHEARSAL HIGHLIGHTS・10.14</p>
+              <h2 id="preview-title">預演搶先看，<br /><em>星期六操場見。</em></h2>
+            </div>
+            <p class="section-heading__aside">
+              10 月 14 日預演拍下的精彩畫面，<br />剪成三支影片。先睹為快，<br />10/17（六）再到現場為孩子加油！
+            </p>
+          </div>
+
+          <figure class="preview-reel">
+            <div class="preview-reel__frame">
+              <video
+                class="preview-reel__video"
+                muted
+                loop
+                playsinline
+                preload="none"
+                poster="./promo/preview-loop-poster.webp"
+                data-src-wide="./promo/preview-loop.mp4"
+                data-src-narrow="./promo/preview-loop-540.mp4"
+                aria-label="12 秒循環動畫：預演搶先看、活力表演與趣味競賽與班際接力、21 班熱血進場、10 月 17 日星期六操場見"
+              ></video>
+              <button class="preview-reel__toggle" type="button" aria-pressed="false" hidden>
+                <span class="preview-reel__toggle-icon" aria-hidden="true">❚❚</span>
+                <span class="preview-reel__toggle-text">暫停動畫</span>
+              </button>
+            </div>
+            <figcaption>
+              <span>12 秒預告動畫</span>
+              預演搶先看 → 活力表演・趣味競賽・班際接力 → 21 班熱血進場 → 10.17 操場見。動畫以 HyperFrames（HTML＋GSAP）渲染。
+            </figcaption>
+          </figure>
+
+          <div class="video-grid">
+            <article class="video-card video-card--feature">
+              <div class="video-card__media">
+                <button class="video-card__play" type="button" data-youtube="AIRwGoDXw2A" data-title="熱血動漫 OP 版">
+                  <img src="./promo/cover-anime.webp" width="960" height="540" alt="熱血動漫 OP 版封面：五個男孩在跑道上朝鏡頭衝刺" loading="lazy" decoding="async" />
+                  <span class="video-card__play-icon" aria-hidden="true">▶</span>
+                  <span class="video-card__time">7:51</span>
+                  <span class="sr-only">在頁面中播放熱血動漫 OP 版</span>
+                </button>
+              </div>
+              <div class="video-card__body">
+                <p class="video-card__tag"><span>NEW</span>電吉他熱血 SOLO</p>
+                <h3>熱血動漫 OP 版</h3>
+                <p>21 班化身角色卡帥氣進場，再照節目順序一話一話看：健康操、無敵小可愛、趣味競賽、賽跑、班際接力到閉幕。</p>
+                <ul class="video-card__chapters" aria-label="熱血動漫 OP 版章節">
+                  <li><a href="https://youtu.be/AIRwGoDXw2A?t=30" target="_blank" rel="noopener noreferrer"><b>0:30</b>運動員進場</a></li>
+                  <li><a href="https://youtu.be/AIRwGoDXw2A?t=128" target="_blank" rel="noopener noreferrer"><b>2:08</b>無敵小可愛</a></li>
+                  <li><a href="https://youtu.be/AIRwGoDXw2A?t=233" target="_blank" rel="noopener noreferrer"><b>3:53</b>100・80 公尺</a></li>
+                  <li><a href="https://youtu.be/AIRwGoDXw2A?t=361" target="_blank" rel="noopener noreferrer"><b>6:01</b>班際接力</a></li>
+                </ul>
+                <a class="video-card__link" href="https://youtu.be/AIRwGoDXw2A" target="_blank" rel="noopener noreferrer">在 YouTube 觀看 <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+
+            <article class="video-card">
+              <div class="video-card__media">
+                <button class="video-card__play" type="button" data-youtube="OidjUSipdOM" data-title="合唱版 MV">
+                  <img src="./promo/cover-vocal.webp" width="960" height="540" alt="合唱版 MV 封面：雙手高舉歡呼的女孩們" loading="lazy" decoding="async" />
+                  <span class="video-card__play-icon" aria-hidden="true">▶</span>
+                  <span class="video-card__time">3:17</span>
+                  <span class="sr-only">在頁面中播放合唱版 MV</span>
+                </button>
+              </div>
+              <div class="video-card__body">
+                <p class="video-card__tag">校慶運動會歌曲</p>
+                <h3>合唱版 MV</h3>
+                <p>搭配〈校慶運動會〉合唱歌曲的快節奏剪輯，畫面附歌詞。</p>
+                <ul class="video-card__chapters" aria-label="合唱版 MV 章節">
+                  <li><a href="https://youtu.be/OidjUSipdOM?t=21" target="_blank" rel="noopener noreferrer"><b>0:21</b>繞場進場</a></li>
+                  <li><a href="https://youtu.be/OidjUSipdOM?t=113" target="_blank" rel="noopener noreferrer"><b>1:53</b>賽跑衝刺</a></li>
+                  <li><a href="https://youtu.be/OidjUSipdOM?t=134" target="_blank" rel="noopener noreferrer"><b>2:14</b>大隊接力</a></li>
+                </ul>
+                <a class="video-card__link" href="https://youtu.be/OidjUSipdOM" target="_blank" rel="noopener noreferrer">在 YouTube 觀看 <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+
+            <article class="video-card">
+              <div class="video-card__media">
+                <button class="video-card__play" type="button" data-youtube="bwAL9BNk1EY" data-title="活動章節版">
+                  <img src="./promo/cover-march.webp" width="960" height="540" alt="活動章節版封面：抱著呼拉圈微笑的小朋友" loading="lazy" decoding="async" />
+                  <span class="video-card__play-icon" aria-hidden="true">▶</span>
+                  <span class="video-card__time">6:02</span>
+                  <span class="sr-only">在頁面中播放活動章節版</span>
+                </button>
+              </div>
+              <div class="video-card__body">
+                <p class="video-card__tag">校慶進行曲</p>
+                <h3>活動章節版</h3>
+                <p>配上兩首進行曲，從繞場進場、趣味競賽、賽跑到大隊接力，完整看一遍。</p>
+                <ul class="video-card__chapters" aria-label="活動章節版章節">
+                  <li><a href="https://youtu.be/bwAL9BNk1EY?t=83" target="_blank" rel="noopener noreferrer"><b>1:23</b>趣味競賽</a></li>
+                  <li><a href="https://youtu.be/bwAL9BNk1EY?t=182" target="_blank" rel="noopener noreferrer"><b>3:02</b>賽跑</a></li>
+                  <li><a href="https://youtu.be/bwAL9BNk1EY?t=248" target="_blank" rel="noopener noreferrer"><b>4:08</b>大隊接力</a></li>
+                </ul>
+                <a class="video-card__link" href="https://youtu.be/bwAL9BNk1EY" target="_blank" rel="noopener noreferrer">在 YouTube 觀看 <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+          </div>
+
+          <p class="preview-note">三支影片都公開在學校 YouTube 頻道「石門國小影音平台」，不用登入就能觀看，歡迎轉傳給家人與畢業生。</p>
         </div>
       </section>
 
