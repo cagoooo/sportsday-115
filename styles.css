@@ -2906,3 +2906,45 @@ svg {
     font-size: 0.92rem;
   }
 }
+
+/* 芋頭紫司儀宣傳：完整呈現雙人插畫，避免手機裁切人物。 */
+.hosts-section {
+  padding: clamp(3rem, 6vw, 6rem) clamp(1.25rem, 5vw, 5rem);
+  background: #eee6f2;
+  border-bottom: 1px solid #d8c8e1;
+}
+.hosts-section__inner {
+  width: min(100%, 1320px);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+}
+.hosts-portrait { margin: 0; min-width: 0; }
+.hosts-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border: 1px solid #d0bfd9;
+  border-radius: 8px;
+}
+.hosts-portrait figcaption { margin-top: .75rem; font-size: .875rem; color: #64526e; }
+.hosts-copy { min-width: 0; }
+.hosts-copy .section-kicker { color: #694281; }
+.hosts-copy h2 {
+  margin: .75rem 0 1.5rem;
+  color: #392945;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.4vw, 3.5rem);
+  line-height: 1.35;
+  letter-spacing: -.04em;
+}
+.hosts-copy h2 em { color: #8754a4; font-style: normal; }
+.hosts-copy > p:not(.section-kicker) { color: #51435a; max-width: 35em; }
+.hosts-copy .text-link { color: #59366f; margin-top: .5rem; }
+@media (max-width: 760px) {
+  .hosts-section__inner { grid-template-columns: minmax(0, 1fr); gap: 1.75rem; }
+  .hosts-copy { grid-row: 1; }
+}
