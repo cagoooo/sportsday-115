@@ -280,7 +280,7 @@ renderSchedule();
     video.addEventListener("pause", renderToggle);
 
     if ("IntersectionObserver" in window) {
-      // 快捲到時（前一個畫面高度）就先在背景下載，捲到時多半已經可以直接播。
+      // 區塊在兩個畫面高度以內就先在背景下載，捲到時多半已經可以直接播。
       const nearObserver = new IntersectionObserver((entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return;
         nearObserver.disconnect();
@@ -288,8 +288,8 @@ renderSchedule();
         // 等網頁其他內容載完再在背景下載，不跟首頁圖片搶網路。
         if (document.readyState === "complete") loadReel();
         else window.addEventListener("load", loadReel, { once: true });
-      }, { rootMargin: "100% 0px 100% 0px" });
-      nearObserver.observe(video);
+      }, { rootMargin: "200% 0px 200% 0px" });
+      nearObserver.observe(video.closest("section") || video);
 
       new IntersectionObserver((entries) => {
         isVisible = entries.some((entry) => entry.isIntersecting);
