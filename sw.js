@@ -71,6 +71,19 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // 預告動畫：網站用 fetch 整支下載（不帶 Range），存進快取後再訪不用重抓。
+  if (requestUrl.pathname.includes("/promo/") && requestUrl.pathname.endsWith(".mp4") && !request.headers.has("range")) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      const cached = await cache.match(request);
+      if (cached) return cached;
+      const response = await fetch(request);
+      if (response.ok && response.status === 200 && response.type === "basic") await cache.put(request, response.clone());
+      return response;
+    })());
+    return;
+  }
+
   if (request.destination === "image") {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);

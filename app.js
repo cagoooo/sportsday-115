@@ -174,7 +174,7 @@ renderSchedule();
       ".day-point, .section-heading, .highlight, .ceremony-card, .schedule-end, " +
       ".parking-heading, .parking-alerts, .parking-option, .parking-rules, " +
       ".flyer-section__heading, .flyer-share-note, .flyer-card, .visitor-intro, .visitor-note, .final-invite h2, " +
-      ".preview-reel, .video-card, .preview-note"
+      ".video-card, .preview-note"
     );
     revealObserver = new IntersectionObserver((entries) => {
       entries.filter((entry) => entry.isIntersecting).forEach((entry, index) => {
@@ -198,32 +198,67 @@ renderSchedule();
   });
 })();
 
-// 預演影片：HyperFrames 預告動畫（進入畫面才載入、播放）與 YouTube 點擊後才嵌入
+// 預演影片：HyperFrames 預告動畫與 YouTube 點擊後才嵌入
+// 預告動畫先整支下載（約 2 MB）再播放，避免網路慢時邊播邊等而卡頓；循環時也不再重抓。
 (() => {
   const video = document.querySelector(".preview-reel__video");
   const toggle = document.querySelector(".preview-reel__toggle");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const saveData = navigator.connection?.saveData === true;
   let userPaused = reduceMotion.matches || saveData;
+  let isVisible = false;
+  let loading = null;
+  let loaded = false;
+  let firstPlay = true;
 
-  function ensureSource() {
-    if (!video || video.getAttribute("src")) return;
-    const narrow = window.matchMedia("(max-width: 700px)").matches;
-    video.src = narrow ? video.dataset.srcNarrow : video.dataset.srcWide;
+  function sourceUrl() {
+    return window.matchMedia("(max-width: 700px)").matches ? video.dataset.srcNarrow : video.dataset.srcWide;
+  }
+
+  function loadReel() {
+    if (loading) return loading;
+    const url = sourceUrl();
+    renderToggle();
+    loading = fetch(url)
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.blob();
+      })
+      .then((blob) => {
+        video.src = URL.createObjectURL(blob);
+      })
+      .catch(() => {
+        video.src = url; // 下載失敗時退回一般串流播放
+      })
+      .finally(() => {
+        loaded = true;
+        renderToggle();
+      });
+    renderToggle();
+    return loading;
   }
 
   function renderToggle() {
     if (!toggle || !video) return;
+    const busy = Boolean(loading) && !loaded && !userPaused;
     const playing = !video.paused;
+    toggle.setAttribute("aria-busy", String(busy));
     toggle.setAttribute("aria-pressed", String(!playing));
-    toggle.querySelector(".preview-reel__toggle-text").textContent = playing ? "暫停動畫" : "播放動畫";
-    toggle.querySelector(".preview-reel__toggle-icon").textContent = playing ? "❚❚" : "▶";
+    toggle.querySelector(".preview-reel__toggle-text").textContent = busy ? "載入中…" : playing ? "暫停動畫" : "播放動畫";
+    toggle.querySelector(".preview-reel__toggle-icon").textContent = busy ? "…" : playing ? "❚❚" : "▶";
   }
 
   function playReel() {
-    ensureSource();
-    const attempt = video.play();
-    if (attempt && typeof attempt.catch === "function") attempt.catch(renderToggle);
+    loadReel().then(() => {
+      if (userPaused || !isVisible) return;
+      if (firstPlay) {
+        firstPlay = false;
+        const posterTime = Number(video.dataset.posterTime || 0);
+        if (posterTime) video.currentTime = posterTime; // 從預覽圖那一格接著播，不會跳一下
+      }
+      const attempt = video.play();
+      if (attempt && typeof attempt.catch === "function") attempt.catch(renderToggle);
+    });
   }
 
   if (video) {
@@ -232,23 +267,37 @@ renderSchedule();
       toggle.addEventListener("click", () => {
         if (video.paused) {
           userPaused = false;
+          isVisible = true;
           playReel();
         } else {
           userPaused = true;
           video.pause();
         }
+        renderToggle();
       });
     }
     video.addEventListener("play", renderToggle);
     video.addEventListener("pause", renderToggle);
 
     if ("IntersectionObserver" in window) {
+      // 快捲到時（前一個畫面高度）就先在背景下載，捲到時多半已經可以直接播。
+      const nearObserver = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        nearObserver.disconnect();
+        if (saveData) return;
+        // 等網頁其他內容載完再在背景下載，不跟首頁圖片搶網路。
+        if (document.readyState === "complete") loadReel();
+        else window.addEventListener("load", loadReel, { once: true });
+      }, { rootMargin: "100% 0px 100% 0px" });
+      nearObserver.observe(video);
+
       new IntersectionObserver((entries) => {
-        const visible = entries.some((entry) => entry.isIntersecting);
-        if (visible && !userPaused) playReel();
-        else if (!visible && !video.paused) video.pause();
+        isVisible = entries.some((entry) => entry.isIntersecting);
+        if (isVisible && !userPaused) playReel();
+        else if (!isVisible && !video.paused) video.pause();
       }, { threshold: 0.3 }).observe(video);
     } else if (!userPaused) {
+      isVisible = true;
       playReel();
     }
 

@@ -2609,13 +2609,16 @@ svg {
   align-items: center;
   padding: 0 1rem;
   color: var(--c-white);
-  background: rgb(16 45 40 / 78%);
+  background: rgb(16 45 40 / 88%);
   border: 1px solid rgb(255 253 248 / 30%);
   border-radius: 999px;
   font-size: 0.82rem;
   font-weight: 800;
   cursor: pointer;
-  backdrop-filter: blur(4px);
+}
+
+.preview-reel__toggle[aria-busy="true"] {
+  cursor: progress;
 }
 
 .preview-reel__toggle:hover {
