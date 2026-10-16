@@ -2948,3 +2948,7 @@ svg {
   .hosts-section__inner { grid-template-columns: minmax(0, 1fr); gap: 1.75rem; }
   .hosts-copy { grid-row: 1; }
 }
+@media (min-width: 821px) and (max-width: 1024px) {
+  .site-nav { gap: .75rem; }
+  .site-nav a { white-space: nowrap; }
+}
