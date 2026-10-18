@@ -2948,13 +2948,30 @@ svg {
   .hosts-section__inner { grid-template-columns: minmax(0, 1fr); gap: 1.75rem; }
   .hosts-copy { grid-row: 1; }
 }
-@media (min-width: 821px) and (max-width: 1024px) {
-  .site-nav { gap: .75rem; }
-  .site-nav a { white-space: nowrap; }
+/* 導覽列：品牌名稱不可被擠斷；中等寬度時收緊間距與字級，避免左上角「石門國小」斷成兩行 */
+.brand { flex-shrink: 0; }
+.brand__name, .brand__name small { white-space: nowrap; }
+.site-nav a { white-space: nowrap; }
+@media (min-width: 821px) and (max-width: 1240px) {
+  .site-header { gap: 1rem; padding-inline: clamp(1rem, 3vw, 2.4rem); }
+  .site-nav { gap: clamp(.55rem, 1.3vw, 1.1rem); }
+  .site-nav a { font-size: .84rem; }
+  .site-nav .site-nav__cta { padding: 0 .9rem; gap: .4rem; }
+}
+@media (min-width: 821px) and (max-width: 1080px) {
+  .brand { gap: .6rem; }
+  .brand__seal { width: 38px; font-size: 1.2rem; }
+  .brand__name small { display: none; }   /* 只留「石門國小」一行，副標在網頁標題已出現 */
+  .site-nav a { font-size: .8rem; }
+  .site-nav .site-nav__cta span { display: none; }
+}
+@media (min-width: 821px) and (max-width: 940px) {
+  .site-nav { gap: .5rem; }
+  .site-nav .site-nav__new::after { display: none; }   /* 太窄時 NEW 標籤先收起來 */
 }
 
 /* ===== 運動會完整紀錄專區（10/18 新增） ===== */
-.site-nav .site-nav__new { color: var(--c-orange-dark); font-weight: 800; }
+.site-nav .site-nav__new { color: var(--c-gold); font-weight: 800; }
 .site-nav .site-nav__new::after { content: "NEW"; margin-left: .3rem; padding: 0 .35rem; color: var(--c-white); background: var(--c-orange); border-radius: 999px; font-size: .62rem; letter-spacing: .06em; vertical-align: 2px; }
 
 .full-section {
