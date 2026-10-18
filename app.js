@@ -174,7 +174,7 @@ renderSchedule();
       ".day-point, .section-heading, .highlight, .ceremony-card, .schedule-end, " +
       ".parking-heading, .parking-alerts, .parking-option, .parking-rules, " +
       ".flyer-section__heading, .flyer-share-note, .flyer-card, .visitor-intro, .visitor-note, .final-invite h2, " +
-      ".video-card, .preview-note"
+      ".video-card, .preview-note, .full-stats li, .full-player, .full-actions"
     );
     revealObserver = new IntersectionObserver((entries) => {
       entries.filter((entry) => entry.isIntersecting).forEach((entry, index) => {
@@ -198,11 +198,17 @@ renderSchedule();
   });
 })();
 
-// 預演影片：HyperFrames 預告動畫與 YouTube 點擊後才嵌入
+// 預告動畫（預演區、完整紀錄區）：HyperFrames 循環動畫與 YouTube 點擊後才嵌入
 // 預告動畫先整支下載（約 2 MB）再播放，避免網路慢時邊播邊等而卡頓；循環時也不再重抓。
-(() => {
-  const video = document.querySelector(".preview-reel__video");
-  const toggle = document.querySelector(".preview-reel__toggle");
+const reelControllers = [];
+function pauseAllReels() {
+  reelControllers.forEach((reel) => reel.pauseByUser());
+}
+
+document.querySelectorAll(".preview-reel").forEach((figure) => {
+  const video = figure.querySelector(".preview-reel__video");
+  const toggle = figure.querySelector(".preview-reel__toggle");
+  if (!video) return;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const saveData = navigator.connection?.saveData === true;
   let userPaused = reduceMotion.matches || saveData;
@@ -218,7 +224,6 @@ renderSchedule();
   function loadReel() {
     if (loading) return loading;
     const url = sourceUrl();
-    renderToggle();
     loading = fetch(url)
       .then((response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -239,7 +244,7 @@ renderSchedule();
   }
 
   function renderToggle() {
-    if (!toggle || !video) return;
+    if (!toggle) return;
     const busy = Boolean(loading) && !loaded && !userPaused;
     const playing = !video.paused;
     toggle.setAttribute("aria-busy", String(busy));
@@ -261,69 +266,305 @@ renderSchedule();
     });
   }
 
-  if (video) {
-    if (toggle) {
-      toggle.hidden = false;
-      toggle.addEventListener("click", () => {
-        if (video.paused) {
-          userPaused = false;
-          isVisible = true;
-          playReel();
-        } else {
-          userPaused = true;
-          video.pause();
-        }
-        renderToggle();
-      });
-    }
-    video.addEventListener("play", renderToggle);
-    video.addEventListener("pause", renderToggle);
-
-    if ("IntersectionObserver" in window) {
-      // 區塊在兩個畫面高度以內就先在背景下載，捲到時多半已經可以直接播。
-      const nearObserver = new IntersectionObserver((entries) => {
-        if (!entries.some((entry) => entry.isIntersecting)) return;
-        nearObserver.disconnect();
-        if (saveData) return;
-        // 等網頁其他內容載完再在背景下載，不跟首頁圖片搶網路。
-        if (document.readyState === "complete") loadReel();
-        else window.addEventListener("load", loadReel, { once: true });
-      }, { rootMargin: "200% 0px 200% 0px" });
-      nearObserver.observe(video.closest("section") || video);
-
-      new IntersectionObserver((entries) => {
-        isVisible = entries.some((entry) => entry.isIntersecting);
-        if (isVisible && !userPaused) playReel();
-        else if (!isVisible && !video.paused) video.pause();
-      }, { threshold: 0.3 }).observe(video);
-    } else if (!userPaused) {
-      isVisible = true;
-      playReel();
-    }
-
-    reduceMotion.addEventListener?.("change", (event) => {
-      if (!event.matches) return;
+  reelControllers.push({
+    pauseByUser() {
       userPaused = true;
-      video.pause();
-    });
-    renderToggle();
-  }
+      if (!video.paused) video.pause();
+      renderToggle();
+    },
+  });
 
-  // 點封面才換成 YouTube 播放器，頁面一開始不載入三個嵌入框。
-  document.querySelectorAll(".video-card__play").forEach((button) => {
-    button.addEventListener("click", () => {
-      const iframe = document.createElement("iframe");
-      iframe.src = `https://www.youtube-nocookie.com/embed/${button.dataset.youtube}?autoplay=1&rel=0&playsinline=1`;
-      iframe.title = `${button.dataset.title}（YouTube 影片）`;
-      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-      iframe.allowFullscreen = true;
-      iframe.referrerPolicy = "strict-origin-when-cross-origin";
-      button.replaceWith(iframe);
-      iframe.focus();
-      if (video && !video.paused) {
+  if (toggle) {
+    toggle.hidden = false;
+    toggle.addEventListener("click", () => {
+      if (video.paused) {
+        userPaused = false;
+        isVisible = true;
+        playReel();
+      } else {
         userPaused = true;
         video.pause();
       }
+      renderToggle();
+    });
+  }
+  video.addEventListener("play", renderToggle);
+  video.addEventListener("pause", renderToggle);
+
+  if ("IntersectionObserver" in window) {
+    // 區塊在兩個畫面高度以內就先在背景下載，捲到時多半已經可以直接播。
+    const nearObserver = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      nearObserver.disconnect();
+      if (saveData) return;
+      // 等網頁其他內容載完再在背景下載，不跟首頁圖片搶網路。
+      if (document.readyState === "complete") loadReel();
+      else window.addEventListener("load", loadReel, { once: true });
+    }, { rootMargin: "200% 0px 200% 0px" });
+    nearObserver.observe(video.closest("section") || video);
+
+    new IntersectionObserver((entries) => {
+      isVisible = entries.some((entry) => entry.isIntersecting);
+      if (isVisible && !userPaused) playReel();
+      else if (!isVisible && !video.paused) video.pause();
+    }, { threshold: 0.3 }).observe(video);
+  } else if (!userPaused) {
+    isVisible = true;
+    playReel();
+  }
+
+  reduceMotion.addEventListener?.("change", (event) => {
+    if (!event.matches) return;
+    userPaused = true;
+    video.pause();
+  });
+  renderToggle();
+});
+
+// 點封面才換成 YouTube 播放器，頁面一開始不載入三個嵌入框。
+document.querySelectorAll(".video-card__play").forEach((button) => {
+  button.addEventListener("click", () => {
+    const iframe = document.createElement("iframe");
+    iframe.src = `https://www.youtube-nocookie.com/embed/${button.dataset.youtube}?autoplay=1&rel=0&playsinline=1`;
+    iframe.title = `${button.dataset.title}（YouTube 影片）`;
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    iframe.allowFullscreen = true;
+    iframe.referrerPolicy = "strict-origin-when-cross-origin";
+    button.replaceWith(iframe);
+    iframe.focus();
+    pauseAllReels();
+  });
+});
+
+// 運動會完整紀錄：章節清單（篩選、搜尋）、點章節跳轉、播放時自動標出目前章節
+// 時間＝影片中的秒數；類別：cer 典禮・per 表演・team 團競拔河・trk 田徑・rly 接力
+const FULL_CHAPTERS = [
+  [0, "低年級舉手海浪舞", "", "per"],
+  [65, "運動員進場", "", "cer"],
+  [769, "典禮開始・主席就位", "", "cer"],
+  [819, "唱國歌", "", "cer"],
+  [871, "向國旗行禮", "", "cer"],
+  [954, "介紹來賓", "", "cer"],
+  [1155, "主席致詞", "", "cer"],
+  [1316, "頒發感謝狀", "", "cer"],
+  [1437, "來賓致詞", "", "cer"],
+  [1803, "家長會長致詞", "", "cer"],
+  [1900, "禮成・運動員退場", "", "cer"],
+  [2004, "健身活力健康操", "六年級", "per"],
+  [2534, "來賓致詞", "", "cer"],
+  [2624, "13勢太極拳及13式太極劍", "石門太極拳發展協會", "per"],
+  [3004, "無敵小可愛", "幼兒園", "per"],
+  [3334, "小雞很忙", "二年級", "per"],
+  [3954, "石來運轉", "四年級", "team"],
+  [4454, "八十公尺", "三年級", "trk"],
+  [4944, "熱鬧滾滾", "一年級", "team"],
+  [5489, "五十公尺", "幼兒園", "trk"],
+  [5650, "運鑽人生", "六年級", "team"],
+  [6325, "跑跑冰淇淋", "二年級", "team"],
+  [6890, "動物狂歡派對", "四年級", "per"],
+  [7525, "空氣棒！棒！棒！", "幼兒園", "team"],
+  [8140, "六十公尺", "一年級", "trk"],
+  [8459, "圈中你我", "五年級", "team"],
+  [8879, "六十公尺", "二年級", "trk"],
+  [9147, "迫不急「袋」衝衝衝", "三年級", "team"],
+  [9792, "拔河比賽", "605 VS 604", "team"],
+  [10262, "拔河比賽", "家長委員 VS 社區", "team"],
+  [10797, "六十公尺", "五年級【女】", "trk"],
+  [11097, "六十公尺", "五年級【男】", "trk"],
+  [11160, "六十公尺", "六年級【女】", "trk"],
+  [11202, "六十公尺", "六年級【男】", "trk"],
+  [11282, "一百公尺", "五年級【女】", "trk"],
+  [11407, "一百公尺", "五年級【男】", "trk"],
+  [11472, "一百公尺", "六年級【女】", "trk"],
+  [11530, "一百公尺", "六年級【男】", "trk"],
+  [11597, "社區趣味競賽", "社區男女", "team"],
+  [12117, "社區 100 公尺", "社區男女", "trk"],
+  [12371, "中午休息", "", "cer"],
+  [12494, "社區 800 公尺接力賽", "社區男女", "rly"],
+  [13124, "班際接力賽", "三年級", "rly"],
+  [13745, "班際接力賽", "四年級", "rly"],
+  [14210, "班際接力賽", "五年級", "rly"],
+  [14695, "班際接力賽", "六年級", "rly"],
+  [15330, "閉幕典禮", "", "cer"],
+  [15647, "頒獎", "", "cer"],
+  [16915, "主席致詞", "", "cer"],
+  [17064, "家長會長致詞", "", "cer"],
+  [17096, "唱校歌", "", "cer"],
+  [17243, "降旗", "", "cer"],
+  [17345, "禮成・運動員退場", "", "cer"],
+  [17410, "散場花絮", "", "cer"],
+];
+
+(() => {
+  const VIDEO_ID = "JsuYRXfxR9o";
+  const section = document.querySelector("#full-video");
+  if (!section) return;
+  const list = section.querySelector("#full-chapter-list");
+  const screen = section.querySelector(".full-player__screen");
+  const startButton = section.querySelector(".full-player__start");
+  const search = section.querySelector("#full-search");
+  const countLabel = section.querySelector("#full-count");
+  const empty = section.querySelector("#full-empty");
+  const filterButtons = [...section.querySelectorAll("[data-filter]")];
+  const CAT_NAME = { cer: "典禮", per: "表演", team: "團競", trk: "田徑", rly: "接力" };
+  let iframe = null;
+  let activeIndex = -1;
+  let filter = "all";
+
+  const clock = (sec) => {
+    const h = Math.floor(sec / 3600);
+    const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0");
+    const s = String(sec % 60).padStart(2, "0");
+    return h ? `${h}:${m}:${s}` : `${Math.floor(sec / 60)}:${s}`;
+  };
+
+  list.innerHTML = FULL_CHAPTERS.map(([t, title, sub, cat], i) => `
+    <li class="full-chapter" data-cat="${cat}" data-index="${i}" data-text="${title}${sub}${CAT_NAME[cat]}">
+      <button type="button" data-time="${t}">
+        <time datetime="PT${t}S">${clock(t)}</time>
+        <span class="full-chapter__title">${title}${sub ? `<small>${sub}</small>` : ""}</span>
+        <span class="full-chapter__cat full-chapter__cat--${cat}">${CAT_NAME[cat]}</span>
+      </button>
+    </li>`).join("");
+  const items = [...list.querySelectorAll(".full-chapter")];
+
+  function applyFilter() {
+    const keyword = (search.value || "").trim().replace(/\s+/g, "");
+    let shown = 0;
+    items.forEach((item) => {
+      const ok = (filter === "all" || item.dataset.cat === filter) && (!keyword || item.dataset.text.includes(keyword));
+      item.hidden = !ok;
+      if (ok) shown += 1;
+    });
+    countLabel.textContent = `${shown} 個`;
+    empty.hidden = shown > 0;
+  }
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      filter = button.dataset.filter;
+      filterButtons.forEach((b) => {
+        const on = b === button;
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-pressed", String(on));
+      });
+      applyFilter();
     });
   });
+  search.addEventListener("input", applyFilter);
+
+  function markActive(index, scroll) {
+    if (index === activeIndex) return;
+    items[activeIndex]?.classList.remove("is-current");
+    items[activeIndex]?.querySelector("button")?.removeAttribute("aria-current");
+    activeIndex = index;
+    const item = items[index];
+    if (!item) return;
+    item.classList.add("is-current");
+    item.querySelector("button").setAttribute("aria-current", "true");
+    if (scroll && !item.hidden) {
+      const top = item.offsetTop - list.clientHeight / 2 + item.clientHeight / 2;
+      list.scrollTo({ top, behavior: "smooth" });
+    }
+  }
+
+  function chapterAt(sec) {
+    let index = 0;
+    FULL_CHAPTERS.forEach(([t], i) => { if (sec >= t) index = i; });
+    return index;
+  }
+
+  function command(func, args = []) {
+    iframe?.contentWindow?.postMessage(JSON.stringify({ event: "command", func, args }), "*");
+  }
+
+  // 播放器回報目前秒數（YouTube 嵌入播放器的 postMessage），用來標出現在播到哪一章
+  window.addEventListener("message", (event) => {
+    if (!iframe || event.source !== iframe.contentWindow) return;
+    let data;
+    try { data = typeof event.data === "string" ? JSON.parse(event.data) : event.data; } catch { return; }
+    const time = data?.info?.currentTime;
+    if (typeof time === "number") markActive(chapterAt(time), true);
+  });
+
+  function openPlayer(start) {
+    pauseAllReels();
+    if (iframe) {
+      command("seekTo", [start, true]);
+      command("playVideo");
+      return;
+    }
+    iframe = document.createElement("iframe");
+    const origin = encodeURIComponent(window.location.origin);
+    iframe.src = `https://www.youtube-nocookie.com/embed/${VIDEO_ID}?autoplay=1&rel=0&playsinline=1&enablejsapi=1&origin=${origin}&start=${start}`;
+    iframe.title = "桃園市石門國小 115 學年度運動會完整紀錄（YouTube 影片）";
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    iframe.allowFullscreen = true;
+    iframe.referrerPolicy = "strict-origin-when-cross-origin";
+    iframe.addEventListener("load", () => {
+      // 請播放器開始回報播放進度
+      iframe.contentWindow?.postMessage(JSON.stringify({ event: "listening", id: 1, channel: "widget" }), "*");
+    });
+    startButton.replaceWith(iframe);
+  }
+
+  startButton.addEventListener("click", () => {
+    openPlayer(0);
+    markActive(0, false);
+    iframe.focus();
+  });
+
+  list.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-time]");
+    if (!button) return;
+    const start = Number(button.dataset.time);
+    openPlayer(start);
+    markActive(chapterAt(start), false);
+    // 手機上播放器在清單上方，跳回去讓家長看得到畫面
+    if (window.matchMedia("(max-width: 1100px)").matches) {
+      screen.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+
+  // 複製影片連結
+  const share = section.querySelector(".full-share");
+  const status = section.querySelector(".full-share__status");
+  share?.addEventListener("click", async () => {
+    const url = share.dataset.url;
+    try {
+      await navigator.clipboard.writeText(url);
+      status.textContent = "已複製連結！貼到 LINE 就能分享。";
+    } catch {
+      status.textContent = `請長按複製：${url}`;
+    }
+    setTimeout(() => { status.textContent = ""; }, 4000);
+  });
+
+  // 數字從 0 數上來（捲到時才播；偏好減少動態就直接顯示）
+  const numbers = [...section.querySelectorAll(".full-stats b")];
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce && "IntersectionObserver" in window) {
+    const toSeconds = (v) => v.split(":").reduce((a, b) => a * 60 + Number(b), 0);
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      numbers.forEach((el, k) => {
+        const target = el.dataset.count;
+        const isClock = target.includes(":");
+        const end = isClock ? toSeconds(target) : Number(target);
+        const t0 = performance.now() + k * 120;
+        const duration = 1300;
+        const step = (now) => {
+          const p = Math.min(1, Math.max(0, (now - t0) / duration));
+          const v = Math.round(end * (1 - Math.pow(1 - p, 3)));
+          el.textContent = isClock ? clock(v) : String(v);
+          if (p < 1) requestAnimationFrame(step);
+          else el.textContent = target;
+        };
+        el.textContent = isClock ? "0:00" : "0";
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.4 });
+    observer.observe(section.querySelector(".full-stats"));
+  }
 })();

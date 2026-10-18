@@ -61,6 +61,7 @@
       </button>
 
       <nav class="site-nav" id="site-nav" aria-label="主要導覽">
+        <a class="site-nav__new" href="#full-video">完整影片</a>
         <a href="#hosts">運動會司儀</a>
         <a href="#preview">預演影片</a>
         <a href="#highlights">活動亮點</a>
@@ -94,7 +95,7 @@
           <div class="hero__actions">
             <a class="button button--bright" href="#schedule">查看完整賽程 <span aria-hidden="true">↓</span></a>
             <a class="text-link" href="#visitors">家長觀賽資訊 <span aria-hidden="true">↗</span></a>
-            <a class="text-link text-link--new" href="#preview"><b>NEW</b> 預演影片搶先看 <span aria-hidden="true">▶</span></a>
+            <a class="text-link text-link--new" href="#full-video"><b>NEW</b> 運動會完整影片上線 <span aria-hidden="true">▶</span></a>
           </div>
 
           <div class="hero__facts" aria-label="活動基本資訊">
@@ -133,6 +134,91 @@
           <p class="hero__caption">SHIMEN ELEMENTARY · SPORTS DAY</p>
         </div>
         <div class="hero__bottom-rule" aria-hidden="true"><span></span><span></span><span></span></div>
+      </section>
+
+      <section class="full-section" id="full-video" aria-labelledby="full-title">
+        <div class="full-section__inner">
+          <div class="section-heading section-heading--light">
+            <div>
+              <p class="section-kicker">FULL RECORD・10.17</p>
+              <h2 id="full-title">完整紀錄上線，<br /><em>一點就看到孩子的身影。</em></h2>
+            </div>
+            <p class="section-heading__aside">
+              10 月 17 日運動會從開幕到閉幕，<br />Sony 固定機位＋GoPro 跟拍雙機全程記錄。<br />點下方章節，直接跳到想看的項目。
+            </p>
+          </div>
+
+          <ul class="full-stats" aria-label="完整紀錄影片資訊">
+            <li><b data-count="4:53:20">4:53:20</b><span>全程長度</span></li>
+            <li><b data-count="54">54</b><span>個章節</span></li>
+            <li><b data-count="30">30</b><span>個節目</span></li>
+            <li><b data-count="2">2</b><span>台攝影機雙機拍攝</span></li>
+          </ul>
+
+          <figure class="preview-reel full-reel">
+            <div class="preview-reel__frame">
+              <video
+                class="preview-reel__video"
+                muted
+                loop
+                playsinline
+                preload="none"
+                disablepictureinpicture
+                disableremoteplayback
+                poster="./promo/full/full-reel-poster.webp"
+                data-src-wide="./promo/full/full-reel-720.mp4"
+                data-src-narrow="./promo/full/full-reel-540.mp4"
+                data-poster-time="1.8"
+                aria-label="12 秒循環動畫：完整紀錄上線、活力表演與拔河比賽與田徑賽跑與大隊接力、54 個章節一點就看到、4 小時 53 分雙機全程紀錄"
+              ></video>
+              <button class="preview-reel__toggle" type="button" aria-pressed="false" hidden>
+                <span class="preview-reel__toggle-icon" aria-hidden="true">❚❚</span>
+                <span class="preview-reel__toggle-text">暫停動畫</span>
+              </button>
+            </div>
+            <figcaption>
+              <span>12 秒專區動畫</span>
+              完整紀錄上線 → 表演・拔河・田徑・接力 → 54 章一點就看到 → 雙機全程 4:53:20。動畫以 HyperFrames（HTML＋GSAP）渲染。
+            </figcaption>
+          </figure>
+
+          <div class="full-player">
+            <div class="full-player__screen">
+              <button class="full-player__start" type="button" aria-label="在頁面中播放運動會完整紀錄影片">
+                <img src="./promo/full/cover-full.webp" width="1280" height="720" alt="運動會完整紀錄封面：石門國小 115 學年度校慶運動會，拔河決賽 605 對 604，下方是海浪舞、表演、田徑賽、大隊接力四張照片" loading="lazy" decoding="async" />
+                <span class="video-card__play-icon" aria-hidden="true">▶</span>
+                <span class="video-card__time">4:53:20</span>
+              </button>
+            </div>
+
+            <div class="full-chapters">
+              <div class="full-chapters__head">
+                <h3>章節快速跳轉 <small id="full-count">54 個</small></h3>
+                <label class="full-chapters__search">
+                  <span class="sr-only">搜尋章節</span>
+                  <input type="search" id="full-search" placeholder="輸入年級或項目，例如：五年級、拔河" autocomplete="off" />
+                </label>
+                <div class="full-chapters__filters" role="group" aria-label="依項目篩選章節">
+                  <button type="button" class="is-active" data-filter="all" aria-pressed="true">全部</button>
+                  <button type="button" data-filter="cer" aria-pressed="false">典禮</button>
+                  <button type="button" data-filter="per" aria-pressed="false">表演</button>
+                  <button type="button" data-filter="team" aria-pressed="false">團競・拔河</button>
+                  <button type="button" data-filter="trk" aria-pressed="false">田徑</button>
+                  <button type="button" data-filter="rly" aria-pressed="false">接力</button>
+                </div>
+              </div>
+              <ol class="full-chapters__list" id="full-chapter-list" aria-label="完整紀錄影片章節"></ol>
+              <p class="full-chapters__empty" id="full-empty" hidden>找不到符合的章節，換個關鍵字試試。</p>
+            </div>
+          </div>
+
+          <div class="full-actions">
+            <a class="button button--bright" href="https://youtu.be/JsuYRXfxR9o" target="_blank" rel="noopener noreferrer">在 YouTube 觀看完整紀錄 <span aria-hidden="true">↗</span></a>
+            <button class="text-link full-share" type="button" data-url="https://youtu.be/JsuYRXfxR9o">複製影片連結，傳給家人 <span aria-hidden="true">⧉</span></button>
+            <span class="full-share__status" role="status" aria-live="polite"></span>
+          </div>
+          <p class="preview-note">影片公開在學校 YouTube 頻道「石門國小影音平台」，不用登入就能觀看。拍攝製作：石門國小 資訊組。</p>
+        </div>
       </section>
 
       <section class="day-strip" aria-label="當日重要時段">
@@ -181,7 +267,7 @@
               <h2 id="preview-title">預演搶先看，<br /><em>星期六操場見。</em></h2>
             </div>
             <p class="section-heading__aside">
-              10 月 14 日預演拍下的精彩畫面，<br />剪成三支影片。先睹為快，<br />10/17（六）再到現場為孩子加油！
+              10 月 14 日預演拍下的精彩畫面，<br />剪成三支影片。<br />正式運動會完整紀錄請看上方專區。
             </p>
           </div>
 
