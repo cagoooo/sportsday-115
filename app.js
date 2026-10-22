@@ -174,7 +174,7 @@ renderSchedule();
       ".day-point, .section-heading, .highlight, .ceremony-card, .schedule-end, " +
       ".parking-heading, .parking-alerts, .parking-option, .parking-rules, " +
       ".flyer-section__heading, .flyer-share-note, .flyer-card, .visitor-intro, .visitor-note, .final-invite h2, " +
-      ".video-card, .preview-note, .full-stats li, .full-player, .full-actions"
+      ".video-card, .preview-note, .full-stats li, .full-player, .full-actions, .album-note"
     );
     revealObserver = new IntersectionObserver((entries) => {
       entries.filter((entry) => entry.isIntersecting).forEach((entry, index) => {
@@ -567,4 +567,32 @@ const FULL_CHAPTERS = [
     }, { threshold: 0.4 });
     observer.observe(section.querySelector(".full-stats"));
   }
+})();
+
+// 運動會相簿：捲到時六本相簿依序「發牌」進場，照片堆展開成扇形（偏好減少動態就直接顯示）
+(() => {
+  const cards = [...document.querySelectorAll(".album-card")];
+  if (!cards.length) return;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce || !("IntersectionObserver" in window) || typeof Element.prototype.animate !== "function") {
+    cards.forEach((card) => card.classList.add("is-dealt"));
+    return;
+  }
+  cards.forEach((card) => card.classList.add("is-waiting"));
+  const observer = new IntersectionObserver((entries) => {
+    entries.filter((entry) => entry.isIntersecting).forEach((entry) => {
+      observer.unobserve(entry.target);
+      const k = cards.indexOf(entry.target) % 3;
+      const card = entry.target;
+      const tilt = parseFloat(getComputedStyle(card).getPropertyValue("--tilt")) || 0;
+      card.classList.remove("is-waiting");
+      card.animate([
+        { opacity: 0, transform: `translateY(60px) rotate(${tilt * 4}deg) scale(0.85)` },
+        { opacity: 1, transform: `translateY(-6px) rotate(${tilt}deg) scale(1.02)`, offset: 0.7 },
+        { opacity: 1, transform: `translateY(0) rotate(${tilt}deg) scale(1)` },
+      ], { duration: 720, delay: k * 120, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" });
+      setTimeout(() => card.classList.add("is-dealt"), 420 + k * 120);   // 照片堆展開成扇形
+    });
+  }, { threshold: 0.25 });
+  cards.forEach((card) => observer.observe(card));
 })();

@@ -62,6 +62,7 @@
 
       <nav class="site-nav" id="site-nav" aria-label="主要導覽">
         <a class="site-nav__new" href="#full-video">完整影片</a>
+        <a class="site-nav__new site-nav__new--plain" href="#albums">相簿</a>
         <a href="#hosts">運動會司儀</a>
         <a href="#preview">預演影片</a>
         <a href="#highlights">活動亮點</a>
@@ -96,6 +97,7 @@
             <a class="button button--bright" href="#schedule">查看完整賽程 <span aria-hidden="true">↓</span></a>
             <a class="text-link" href="#visitors">家長觀賽資訊 <span aria-hidden="true">↗</span></a>
             <a class="text-link text-link--new" href="#full-video"><b>NEW</b> 運動會完整影片上線 <span aria-hidden="true">▶</span></a>
+            <a class="text-link text-link--new" href="#albums"><b>NEW</b> 運動會相簿 <span aria-hidden="true">📷</span></a>
           </div>
 
           <div class="hero__facts" aria-label="活動基本資訊">
@@ -218,6 +220,135 @@
             <span class="full-share__status" role="status" aria-live="polite"></span>
           </div>
           <p class="preview-note">影片公開在學校 YouTube 頻道「石門國小影音平台」，不用登入就能觀看。拍攝製作：石門國小 資訊組。</p>
+        </div>
+      </section>
+
+      <section class="album-section" id="albums" aria-labelledby="album-title">
+        <div class="album-section__inner">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">PHOTO ALBUMS・10.17</p>
+              <h2 id="album-title">運動會相簿，<br /><em>把每一個笑容帶回家。</em></h2>
+            </div>
+            <p class="section-heading__aside">
+              運動會當天拍下的照片整理成 6 本 Google 相簿，<br />點封面就能打開，<br />不用登入也能瀏覽、下載。
+            </p>
+          </div>
+
+          <figure class="preview-reel album-reel">
+            <div class="preview-reel__frame">
+              <video
+                class="preview-reel__video"
+                muted
+                loop
+                playsinline
+                preload="none"
+                disablepictureinpicture
+                disableremoteplayback
+                poster="./promo/album/album-reel-poster.webp"
+                data-src-wide="./promo/album/album-reel-720.mp4"
+                data-src-narrow="./promo/album/album-reel-540.mp4"
+                data-poster-time="1.8"
+                aria-label="12 秒循環動畫：相機閃光、運動會相簿上線、六張拍立得照片飛上桌、照片放大輪播、六本相簿點封面就看得到"
+              ></video>
+              <button class="preview-reel__toggle" type="button" aria-pressed="false" hidden>
+                <span class="preview-reel__toggle-icon" aria-hidden="true">❚❚</span>
+                <span class="preview-reel__toggle-text">暫停動畫</span>
+              </button>
+            </div>
+            <figcaption>
+              <span>12 秒專區動畫</span>
+              相機閃光 → 六張拍立得飛上桌 → 照片放大輪播 → 6 本相簿點封面就看得到。動畫以 HyperFrames（HTML＋GSAP）渲染。
+            </figcaption>
+          </figure>
+
+          <ol class="album-grid" aria-label="運動會 Google 相簿">
+            <li class="album-card" style="--tilt:-3deg; --accent: var(--c-orange);">
+              <a href="https://photos.google.com/share/AF1QipO_mswqULvawCmlcdBHFvmW64uxUt4ZqGLccd86Ynj8_hIg9y5yQ9kfXu1LLnNIWw?key=cUJoWDdvSXFDTzRLLWdpekFlSHFqeDhGdmpqbEdn" target="_blank" rel="noopener noreferrer">
+                <span class="album-card__stack" aria-hidden="true">
+                  <img src="./promo/album/a1_07.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                  <img src="./promo/album/a1_04.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                  <img src="./promo/album/a1_02.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                </span>
+                <span class="album-card__body">
+                  <b class="album-card__no">1</b>
+                  <span class="album-card__title">相簿 1<small>進場・開幕典禮</small></span>
+                  <span class="album-card__go">打開相簿 <span aria-hidden="true">↗</span></span>
+                </span>
+              </a>
+            </li>
+            <li class="album-card" style="--tilt:2deg; --accent: #c22e78;">
+              <a href="https://photos.google.com/share/AF1QipMdA3XdXnnjhncHd4HX6amLurZ_ETb1gq48erZG9HUKKckjobyezeBDY750lCXcXA?key=LXpZUE5BSzBjOEtXRnoxV3l0OHZldjlfSUFzemxn" target="_blank" rel="noopener noreferrer">
+                <span class="album-card__stack" aria-hidden="true">
+                  <img src="./promo/album/a2_09.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                  <img src="./promo/album/a2_06.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                  <img src="./promo/album/a2_01.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                </span>
+                <span class="album-card__body">
+                  <b class="album-card__no">2</b>
+                  <span class="album-card__title">相簿 2<small>表演・趣味競賽</small></span>
+                  <span class="album-card__go">打開相簿 <span aria-hidden="true">↗</span></span>
+                </span>
+              </a>
+            </li>
+            <li class="album-card" style="--tilt:-2deg; --accent: #11845a;">
+              <a href="https://photos.google.com/share/AF1QipMTvLmo7Ct3vYZjVmDmrha0YriDZDdDWJeUMSaD9nK8wzcCVePqNwF7FPzHKVmcOg?key=di1NOHNVTFA1VHd0VFd5ZkFhZkE4RXgxNGNVaEJ3" target="_blank" rel="noopener noreferrer">
+                <span class="album-card__stack" aria-hidden="true">
+                  <img src="./promo/album/a3_01.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                  <img src="./promo/album/a3_07.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                  <img src="./promo/album/a3_06.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                </span>
+                <span class="album-card__body">
+                  <b class="album-card__no">3</b>
+                  <span class="album-card__title">相簿 3<small>田徑・拔河</small></span>
+                  <span class="album-card__go">打開相簿 <span aria-hidden="true">↗</span></span>
+                </span>
+              </a>
+            </li>
+            <li class="album-card" style="--tilt:3deg; --accent: #7b2cbf;">
+              <a href="https://photos.google.com/share/AF1QipMDhVlHXAmnjg1NbwcLNLUJMfpK2K346E-JPF5IXJoREOXouGs7fygZxQKd-NhibA?key=ZHZ1bXNhalBpOVhBY3lDWjVBWTBoaW80YTkxVFB3" target="_blank" rel="noopener noreferrer">
+                <span class="album-card__stack" aria-hidden="true">
+                  <img src="./promo/album/a4_cover.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                  <img src="./promo/album/a4_10.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                  <img src="./promo/album/a4_03.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                </span>
+                <span class="album-card__body">
+                  <b class="album-card__no">4</b>
+                  <span class="album-card__title">相簿 4<small>田徑・頒獎</small></span>
+                  <span class="album-card__go">打開相簿 <span aria-hidden="true">↗</span></span>
+                </span>
+              </a>
+            </li>
+            <li class="album-card" style="--tilt:-2deg; --accent: #2369c2;">
+              <a href="https://photos.google.com/share/AF1QipPFCxa9Mjexa9YEACCcW_rmfBM2qEXxsPvOncT3CI4BG9Z9QC6-uwMKu2Jpyt_9Ow?key=UmtpLU1INVhaZklCRk1zRWFQN2wyeDBZWkJRS0FB" target="_blank" rel="noopener noreferrer">
+                <span class="album-card__stack" aria-hidden="true">
+                  <img src="./promo/album/a5_05.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                  <img src="./promo/album/a5_cover.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                  <img src="./promo/album/a5_01.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                </span>
+                <span class="album-card__body">
+                  <b class="album-card__no">5</b>
+                  <span class="album-card__title">相簿 5<small>大隊接力</small></span>
+                  <span class="album-card__go">打開相簿 <span aria-hidden="true">↗</span></span>
+                </span>
+              </a>
+            </li>
+            <li class="album-card" style="--tilt:2deg; --accent: #c99a1e;">
+              <a href="https://photos.google.com/share/AF1QipNA0sAJ56j6FWN8R4GFBZTYnHd6_lOdKBCyr6t6L4l-69okdZoRW5g0Vcu_GFKYFQ?key=YzN0TmNoUWdobUtpb0NvS05uOU9BWDlMa3dLV09B" target="_blank" rel="noopener noreferrer">
+                <span class="album-card__stack" aria-hidden="true">
+                  <img src="./promo/album/a6_10.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                  <img src="./promo/album/a6_03.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                  <img src="./promo/album/a6_cover.webp" alt="" loading="lazy" decoding="async" width="720" height="480" />
+                </span>
+                <span class="album-card__body">
+                  <b class="album-card__no">6</b>
+                  <span class="album-card__title">相簿 6<small>頒獎・全日花絮</small></span>
+                  <span class="album-card__go">打開相簿 <span aria-hidden="true">↗</span></span>
+                </span>
+              </a>
+            </li>
+          </ol>
+          <p class="album-note">📷 相簿放在 Google 相簿，點封面會在新分頁打開；照片可以按右上角「⋮」下載。分享照片時請留意孩子的隱私，只在家人群組分享就好喔。</p>
         </div>
       </section>
 
